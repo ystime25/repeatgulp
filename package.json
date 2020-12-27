@@ -7,5 +7,12 @@
     "url": "git+https://github.com/ystime25/repeatgulp.git"
   },
   "author": "Youn-Seok Lee <ystime25@gmail.com>",
-  "license": "ISC"
+  "license": "ISC",
+  "scripts": {
+    "dev": "gulp dev",
+    "build": "gulp build"
+  },
+  "devDependencies": {
+    "gulp": "^4.0.2"
+  }
 }
