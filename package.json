@@ -1,0 +1,11 @@
+{
+  "name": "repeatgulp",
+  "version": "1.0.0",
+  "description": "repeating gulp development settings",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ystime25/repeatgulp.git"
+  },
+  "author": "Youn-Seok Lee <ystime25@gmail.com>",
+  "license": "ISC"
+}
