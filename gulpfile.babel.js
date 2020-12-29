@@ -8,6 +8,7 @@ import autoPrefix from "gulp-autoprefixer"
 import minifyCSS from "gulp-csso";
 import browserify from "gulp-bro";
 import babelify from "babelify";
+import ghPages from "gulp-gh-pages";
 
 sass.compiler = require("node-sass"); 
 
@@ -40,7 +41,7 @@ const pug = () =>
         .pipe(gulp.dest(routes.pug.dest))
         .pipe(connect.reload());
 
-const clean = () => del(["build/"]);
+const clean = () => del(["build/", ".publish"]);
 
 const webserver = () => {
     console.log("Server Activation Comfirmed")
@@ -76,6 +77,11 @@ const js = () =>
         }))
         .pipe(gulp.dest(routes.js.dest));
 
+const ghDeploy = () => 
+    gulp
+        .src("build/**/*")
+        .pipe(ghPages());
+
 
 const detectChange = () => {
     console.log("Applying Modifications");
@@ -90,4 +96,6 @@ const assets = gulp.series([pug, styles, js]);
 
 const postDev = gulp.series([webserver, detectChange]);
 
-export const dev = gulp.series([prepare, assets, postDev]);
+export const build = gulp.series([prepare, assets]);
+export const dev = gulp.series([build, postDev]);
+export const deploy = gulp.series([build, ghDeploy, clean]);
