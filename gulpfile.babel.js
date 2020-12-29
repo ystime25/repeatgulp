@@ -6,6 +6,8 @@ import image from "gulp-image";
 import sass from "gulp-sass";
 import autoPrefix from "gulp-autoprefixer"
 import minifyCSS from "gulp-csso";
+import browserify from "gulp-bro";
+import babelify from "babelify";
 
 sass.compiler = require("node-sass"); 
 
@@ -23,6 +25,11 @@ const routes = {
         watch: "src/scss/**/*.scss",
         src:"src/scss/style.scss",
         dest:"build/css"
+    },
+    js: {
+        watch: "src/js/**/*.js",
+        src:"src/js/main.js",
+        dest:"build/js"
     }
 };
 
@@ -44,12 +51,6 @@ const webserver = () => {
     })
 };
 
-const detectChange = () => {
-    console.log("Applying Modifications");
-    gulp.watch(routes.pug.watch, pug);
-    gulp.watch(routes.scss.watch, styles);
-};
-
 const img = () =>
     gulp
         .src(routes.img.src)
@@ -64,12 +65,29 @@ const styles = () =>
         .pipe(minifyCSS())
         .pipe(gulp.dest(routes.scss.dest));
 
+const js = () =>
+    gulp
+        .src(routes.js.src)
+        .pipe(browserify({
+            transform: [
+                babelify.configure({ presets: ["@babel/preset-env"]}),
+                ["uglifyify", { global: true}]
+            ]
+        }))
+        .pipe(gulp.dest(routes.js.dest));
+
+
+const detectChange = () => {
+    console.log("Applying Modifications");
+    gulp.watch(routes.pug.watch, pug);
+    gulp.watch(routes.scss.watch, styles);
+    gulp.watch(routes.js.watch, js);
+};
+
 const prepare = gulp.series([clean, img]);
 
-const assets = gulp.series([pug, styles]);
+const assets = gulp.series([pug, styles, js]);
 
 const postDev = gulp.series([webserver, detectChange]);
 
 export const dev = gulp.series([prepare, assets, postDev]);
-
-

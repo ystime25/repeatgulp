@@ -23,10 +23,13 @@
     "del": "^6.0.0"
   },
   "dependencies": {
+    "babelify": "^10.0.0",
     "gulp-autoprefixer": "^7.0.1",
+    "gulp-bro": "^2.0.0",
     "gulp-csso": "^4.0.1",
     "gulp-sass": "^4.1.0",
-    "node-sass": "^5.0.0"
+    "node-sass": "^5.0.0",
+    "uglifyify": "^5.0.2"
   },
   "browserslist": [
     "last 2 versions"
