@@ -3,6 +3,9 @@ import gulpPug from "gulp-pug";
 import del from "del";
 import connect from "gulp-connect";
 import image from "gulp-image";
+import sass from "gulp-sass";
+
+sass.compiler = require("node-sass"); 
 
 const routes = {
     pug: {
@@ -13,6 +16,11 @@ const routes = {
     img: {
         src:"src/img/*",
         dest:"build/img"
+    },
+    scss: {
+        watch: "src/scss/**/*.scss",
+        src:"src/scss/style.scss",
+        dest:"build/css"
     }
 };
 
@@ -35,8 +43,9 @@ const webserver = () => {
 };
 
 const detectChange = () => {
-    console.log("Applying Modifications")
-    gulp.watch(routes.pug.watch, pug)
+    console.log("Applying Modifications");
+    gulp.watch(routes.pug.watch, pug);
+    gulp.watch(routes.scss.watch, styles);
 };
 
 const img = () =>
@@ -45,11 +54,18 @@ const img = () =>
         .pipe(image())
         .pipe(gulp.dest(routes.img.dest));
 
+const styles = () =>
+    gulp
+        .src(routes.scss.src)
+        .pipe(sass().on("error", sass.logError))
+        .pipe(gulp.dest(routes.scss.dest));
+
 const prepare = gulp.series([clean, img]);
 
-const assets = gulp.series([pug]);
+const assets = gulp.series([pug, styles]);
 
 const postDev = gulp.series([webserver, detectChange]);
 
 export const dev = gulp.series([prepare, assets, postDev]);
+
 
